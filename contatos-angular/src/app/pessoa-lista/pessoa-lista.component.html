@@ -30,7 +30,7 @@
                 <a class="btn btn-primary" role="button" [routerLink]="['alterar', pessoa.id]">
                   <i class="fas fa-edit"></i> Alterar
                 </a>
-                <button type="button" class="btn btn-danger" (click)="confirmarExclusao(pessoa.id!)">
+                <button type="button" class="btn btn-danger" (click)="abrirModalExclusao(pessoa.id!, modalExclusao)">
                   <i class="fas fa-trash-alt"></i> Excluir
                 </button>
               </div>
@@ -48,25 +48,18 @@
     </main>
   </div>
 </div>
-<ng-template #content let-modal>
-  <div class="modal" id="modalExcluir" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
-    aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalLabel"><i class="fas fa-trash-alt"></i> Confirmar exclusão</h5>
-          <button type="button" class="btn-close" (click)="fecharModal()" aria-label="Fechar"></button>
-        </div>
-        <div class="modal-body">
-          <p id="modalExcluirMsg">{{modal.mensagem}}</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-dark" (click)="fecharModal()">Não</button>
-          <form id="modalExcluirForm" style="display: inline-block" method="post">
-            <button type="submit" class="btn btn-danger">Sim</button>
-          </form>
-        </div>
-      </div>
-    </div>
+<ng-template #modalExclusao let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="modalLabel"><i class="fas fa-trash-alt"></i> Confirmar exclusão</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss('Fechar')" aria-label="Fechar"></button>
+  </div>
+  <div class="modal-body">
+    <p id="modalExcluirMsg">{{modalInfo?.mensagem}}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Botão Não')">Não</button>
+    <form id="modalExcluirForm" style="display: inline-block" (submit)="excluir(modalInfo?.id!)">
+      <button type="submit" class="btn btn-danger">Sim</button>
+    </form>
   </div>
 </ng-template>
