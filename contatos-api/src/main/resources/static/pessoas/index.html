@@ -35,9 +35,9 @@
   </nav>
   <!-- NAVBAR - FIM -->
 
-  <main class="container-lg" class="flex-shrink-0">
+  <div class="container-lg flex-shrink-0">
     <div class="row">
-      <div class="col-lg-12">
+      <main class="col-lg-12">
         <h1>Pessoas - HTML clássico</h1>
 
         <div id="alerta" class="alert d-none" role="alert">
@@ -94,10 +94,10 @@
              role="button" href="form.html">
               <i class="fas fa-plus-square"></i> Incluir novo
           </a>
-      </div>
-      </div>
+        </div>
+      </main>
     </div>
-  </main>
+  </div>
 
   <!-- FOOTER - INICIO -->
   <footer class="footer mt-auto py-3 bg-body-tertiary">
@@ -193,7 +193,7 @@
       const botaoExcluir = evt.relatedTarget; // Botão clicado que disparou evento
       const id = botaoExcluir.dataset.itemId; // Recupera informação do atributo data-item.id
       const elModal = evt.target; // Recuperar o próprio modal
-      elModal.querySelector('#modalExcluirMsg').textContent = 'Confirma remoção da pessoa ID ' + id + '?';
+      elModal.querySelector('#modalExcluirMsg').textContent = 'Confirma exclusão da pessoa ID ' + id + '?';
       elModal.querySelector('#modalExcluirForm').action = `/api/pessoas/${id}`;
     });
 
