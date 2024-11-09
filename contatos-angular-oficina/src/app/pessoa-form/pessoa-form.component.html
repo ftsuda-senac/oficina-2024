@@ -1,0 +1,72 @@
+<div class="container-lg flex-shrink-0">
+  <div class="row">
+    <main class="col-lg-12">
+      <h1>Pessoas - Angular</h1>
+      @if (pessoaId) {
+        <h2 id="tituloAlteracao">Alterar pessoa - ID {{ pessoaId }}</h2>
+      } @else {
+        <h2 id="tituloInclusao">Incluir nova pessoa</h2>
+      }
+      <form [formGroup]="dadosForm" (submit)="enviarDados()" novalidate>
+        <div class="row mb-3">
+          <label for="txtNome" class="col-sm-2 col-form-label">Nome</label>
+          <div class="col-sm-10">
+            <input type="text" formControlName="nome" id="txtNome" placeholder="Preencha o nome completo"
+              class="form-control" maxlength="100" required />
+            <div class="invalid-feedback"></div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="txtEmail" class="col-sm-2 col-form-label">E-mail</label>
+          <div class="col-sm-10">
+            <input type="email" formControlName="email" id="txtEmail" placeholder="E-mail válido" class="form-control"
+              maxlength="100" required />
+            <div class="invalid-feedback"></div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="txtDataNascimento" class="col-sm-2 col-form-label">Data de nascimento</label>
+          <div class="col-sm-10">
+            <input type="date" formControlName="dataNascimento" id="txtDataNascimento" class="form-control" required />
+            <div class="invalid-feedback"></div>
+          </div>
+        </div>
+        <fieldset class="row mb-3">
+          <legend class="col-sm-2 col-form-label pt-0">Interesses</legend>
+
+          <!-- OBS: OPÇÕES ABAIXO DEVEM SER CARREGADOS VIA AJAX -->
+          <!-- ESTAO APRESENTADOS DIRETAMENTE NESTE HTML SOMENTE COMO EXEMPLO -->
+          <div class="col-sm-10">
+            <div id="opcoesInteresses">
+              @for(interesse of opcoesInteresses; track interesse.id) {
+              <div class="form-check form-check-inline">
+                <input type="checkbox" name="interessesIds"
+                  [value]="interesse.id" [id]="'interesse' + interesse.id"
+                  [checked]="interesse.selecionado"
+                  (click)="interesse.selecionado = !interesse.selecionado"
+                  class="form-check-input" />
+                <label [for]="'interesse' + interesse.id" class="form-check-label">{{ interesse.nome }}</label>
+              </div>
+              }
+            </div>
+            <div class="invalid-feedback"></div>
+          </div>
+        </fieldset>
+
+        <div class="row">
+          <div class="col-md-3 offset-md-3">
+            <div class="d-grid">
+              <a [routerLink]="['/pessoas']" role="button" class="btn btn-outline-dark">Cancelar</a>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success">Salvar</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </main>
+
+  </div>
+</div>
