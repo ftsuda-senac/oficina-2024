@@ -1,0 +1,16 @@
+button {
+	font-size: 2rem;
+	display: block;
+	min-width: 500px;
+	background-color: green;
+	color: white;
+
+	&:not(:last-child) {
+		margin-bottom: 50px;
+	}
+
+	&:disabled {
+		background-color: red;
+		color: white;
+	}
+}
