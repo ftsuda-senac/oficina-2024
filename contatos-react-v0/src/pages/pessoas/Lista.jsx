@@ -103,7 +103,7 @@ const PessoaLista = function () {
           </main>
         </div>
       </div>
-      <Modal show={showModalExcluir}>
+      <Modal show={showModalExcluir} backdrop="static" keyboard={false}>
         <Modal.Header>{modalExcluirInfo.titulo}</Modal.Header>
         <Modal.Body>
           <p>{modalExcluirInfo.mensagem}</p>

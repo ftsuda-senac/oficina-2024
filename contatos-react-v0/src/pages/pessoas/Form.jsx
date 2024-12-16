@@ -72,6 +72,7 @@ const PessoaForm = function () {
     setErros({}); // Limpar erros
     const httpMethod = id ? 'put' : 'post';
     const apiUrl = `http://localhost:8080/api/pessoas${id ? `/${id}`: ''}`;
+
     const httpResp = await fetch(apiUrl, {
       method: httpMethod,
       headers: {
@@ -110,7 +111,7 @@ const PessoaForm = function () {
       <div className="row">
         <main className="col-lg-12">
           <h1>Pessoas - React JS</h1>
-          <h2>{id ? `Alterar pessoa (ID: ${id})` : 'Incluir nova pessoa'}</h2>
+          <h2>{id ? `Alterar pessoa - ID: ${id}` : 'Incluir nova pessoa'}</h2>
           <form method="post" noValidate id="formDados" onSubmit={salvar}>
             <div className="row mb-3">
               <label htmlFor="txtNome" className="col-sm-2 col-form-label">Nome</label>
