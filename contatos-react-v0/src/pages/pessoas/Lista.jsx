@@ -1,6 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const PessoaLista = function () {
+
+  const [dados, setDados] = useState([]);
+
+  useEffect(() => {
+    const carregarDados = async function() {
+      const httpResp = await fetch('http://localhost:8080/api/pessoas');
+      if (!httpResp.ok) {
+        alert('Erro ao carregar dados')
+        return;
+      }
+      const dadosJson = await httpResp.json();
+      setDados(dadosJson);
+    };
+    carregarDados();
+  }, []);
+
 
   return (
     <div className="container-lg flex-shrink-0">
@@ -23,38 +39,26 @@ const PessoaLista = function () {
               </tr>
             </thead>
             <tbody id="dadosTabela">
-              <tr>
-                <td>1</td>
-                <td>Exemplo 1</td>
-                <td>exemplo1@teste.com.br</td>
-                <td>09/06/1970</td>
-                <td>
-                  <div className="btn-group" role="group" aria-label="Ações">
-                    <a className="btn btn-primary" role="button" href="form.html">
-                      <i className="fas fa-edit"></i> Alterar
-                    </a>
-                    <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir" data-item-id="0">
-                      <i className="fas fa-trash-alt"></i> Excluir
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Exemplo 2</td>
-                <td>exemplo2@teste.com.br</td>
-                <td>09/06/1970</td>
-                <td>
-                  <div className="btn-group" role="group" aria-label="Ações">
-                    <a className="btn btn-primary" role="button" href="form.html">
-                      <i className="fas fa-edit"></i> Alterar
-                    </a>
-                    <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir" data-item-id="0">
-                      <i className="fas fa-trash-alt"></i> Excluir
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              {
+                dados.map(p => (
+                  <tr key={`pessoa${p.id}`}>
+                    <td>{p.id}</td>
+                    <td>{p.nome}</td>
+                    <td>{p.email}</td>
+                    <td>{p.dataNascimento}</td>
+                    <td>
+                      <div className="btn-group" role="group" aria-label="Ações">
+                        <a className="btn btn-primary" role="button" href="form.html">
+                          <i className="fas fa-edit"></i> Alterar
+                        </a>
+                        <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir" data-item-id="0">
+                          <i className="fas fa-trash-alt"></i> Excluir
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              }
             </tbody>
           </table>
           <div>
