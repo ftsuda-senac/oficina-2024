@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 
 const PessoaForm = function () {
+
+  const navigate = useNavigate();
+  const { id } = useParams();
 
   const [interesses, setInteresses] = useState([]);
   const [pessoa, setPessoa] = useState({});
@@ -18,7 +21,26 @@ const PessoaForm = function () {
       setInteresses(dadosJson);
     };
     obterInteresses();
-  });
+    if (id) {
+      // Carregar usuário para alteração
+      const obterDados = async function() {
+        const httpResp = await fetch(`http://localhost:8080/api/pessoas/${id}`);
+        if (!httpResp.ok) {
+          alert('Erro ao carregar dados')
+          return;
+        }
+        const dadosJson = await httpResp.json();
+        setPessoa({
+          id: dadosJson.id,
+          nome: dadosJson.nome,
+          email: dadosJson.email,
+          dataNascimento: dadosJson.dataNascimento,
+          interessesIds: dadosJson.interesses?.map(i => i.id)
+        })
+      };
+      obterDados();
+    }
+  }, []);
 
   const handleInputChange = function(evt) {
     setPessoa((atual) => ({
@@ -29,7 +51,7 @@ const PessoaForm = function () {
 
   const handleCheckboxChange = function(evt) {
     const chkbox = evt.target;
-    const numValue = Number(chkbox.value);
+    const numValue = Number(chkbox.value); // Precisa converver para numero
     let interesses = pessoa.interessesIds || [];
 
     if (chkbox.checked) {
@@ -48,8 +70,10 @@ const PessoaForm = function () {
   const salvar = async function(evt) {
     evt.preventDefault();
     setErros({}); // Limpar erros
-    const httpResp = await fetch('http://localhost:8080/api/pessoas', {
-      method: 'POST',
+    const httpMethod = id ? 'put' : 'post';
+    const apiUrl = `http://localhost:8080/api/pessoas${id ? `/${id}`: ''}`;
+    const httpResp = await fetch(apiUrl, {
+      method: httpMethod,
       headers: {
         'content-type': 'application/json',
       },
@@ -72,7 +96,9 @@ const PessoaForm = function () {
         return;
       }
     }
-    alert('Pessoa incluida com sucesso');
+    const msgSucesso = id ? `Pessoa ${id} alterada com sucesso` : 'Pessoa incluida com sucesso';
+    alert(msgSucesso);
+    navigate('..');
   }
 
   useEffect(() => {
@@ -84,8 +110,7 @@ const PessoaForm = function () {
       <div className="row">
         <main className="col-lg-12">
           <h1>Pessoas - React JS</h1>
-          <h2 id="tituloInclusao" className="d-none">Incluir nova pessoa</h2>
-          <h2 id="tituloAlteracao" className="d-none">Alterar pessoa</h2>
+          <h2>{id ? `Alterar pessoa (ID: ${id})` : 'Incluir nova pessoa'}</h2>
           <form method="post" noValidate id="formDados" onSubmit={salvar}>
             <div className="row mb-3">
               <label htmlFor="txtNome" className="col-sm-2 col-form-label">Nome</label>
@@ -96,7 +121,6 @@ const PessoaForm = function () {
                   {
                     erros.nome &&  <div className="invalid-feedback">{erros.nome}</div>
                   }
-
               </div>
             </div>
             <div className="row mb-3">
@@ -134,7 +158,8 @@ const PessoaForm = function () {
                       return (
                         <div className="form-check form-check-inline" key={interesseHtmlId}>
                           <input type="checkbox" name="interessesIds" value={interesse.id} id={interesseHtmlId}
-                            className="form-check-input" onChange={handleCheckboxChange} />
+                            className="form-check-input" checked={pessoa.interessesIds?.includes(interesse.id)}
+                            onChange={handleCheckboxChange} />
                           <label htmlFor={interesseHtmlId} className="form-check-label">{interesse.nome}</label>
                         </div>
                       );
