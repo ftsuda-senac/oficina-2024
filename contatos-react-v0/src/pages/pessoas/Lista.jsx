@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 
 const PessoaLista = function () {
 
@@ -48,9 +49,8 @@ const PessoaLista = function () {
                     <td>{p.dataNascimento}</td>
                     <td>
                       <div className="btn-group" role="group" aria-label="Ações">
-                        <a className="btn btn-primary" role="button" href="form.html">
-                          <i className="fas fa-edit"></i> Alterar
-                        </a>
+                        <NavLink to={`alterar/${p.id}`}
+                          className="btn btn-primary" role="button"><i className="fas fa-edit"></i> Alterar</NavLink>
                         <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir" data-item-id="0">
                           <i className="fas fa-trash-alt"></i> Excluir
                         </button>
@@ -62,10 +62,8 @@ const PessoaLista = function () {
             </tbody>
           </table>
           <div>
-            <a className="btn btn-lg btn-success"
-              role="button" href="form.html">
-              <i className="fas fa-plus-square"></i> Incluir novo
-            </a>
+            <NavLink to="novo" className="btn btn-lg btn-success"
+              role="button"><i className="fas fa-plus-square"></i> Incluir novo</NavLink>
           </div>
         </main>
       </div>

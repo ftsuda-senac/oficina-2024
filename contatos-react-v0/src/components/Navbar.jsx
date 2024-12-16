@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 export default function Navbar(props) {
   return (
     <nav className="navbar navbar-expand-md navbar-dark bg-dark mb-4">
@@ -10,7 +12,7 @@ export default function Navbar(props) {
         <div className="collapse navbar-collapse" id="navbarCollapse">
           <ul className="navbar-nav me-auto mb-2 mb-md-0">
             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="/pessoas/index.html">Pessoas</a>
+              <NavLink to="/pessoas" className="nav-link">Pessoas</NavLink>
             </li>
             <li className="nav-item">
               <a className="nav-link">Interesses</a>

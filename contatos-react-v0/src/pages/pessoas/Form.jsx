@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 
 const PessoaForm = function () {
 
@@ -91,7 +92,7 @@ const PessoaForm = function () {
               <div className="col-sm-10">
                 <input type="text" name="nome" value={pessoa.nome} id="txtNome" placeholder="Preencha o nome completo"
                   className={`form-control ${erros.nome ? 'is-invalid' : ''}`}
-                  maxlength="100" required onChange={handleInputChange} />
+                  maxLength="100" required onChange={handleInputChange} />
                   {
                     erros.nome &&  <div className="invalid-feedback">{erros.nome}</div>
                   }
@@ -103,7 +104,7 @@ const PessoaForm = function () {
               <div className="col-sm-10">
                 <input type="email" name="email" value={pessoa.email} id="txtEmail" placeholder="E-mail válido"
                   className={`form-control ${erros.email ? 'is-invalid' : ''}`}
-                  maxlength="100" required  onChange={handleInputChange} />
+                  maxLength="100" required  onChange={handleInputChange} />
                   {
                     erros.email &&  <div className="invalid-feedback">{erros.email}</div>
                   }
@@ -147,7 +148,7 @@ const PessoaForm = function () {
             <div className="row">
               <div className="col-md-3 offset-md-3">
                 <div className="d-grid">
-                  <a href="index.html" role="button" className="btn btn-outline-dark">Cancelar</a>
+                  <NavLink to=".."  className="btn btn-outline-dark">Cancelar</NavLink>
                 </div>
               </div>
               <div className="col-md-3">

@@ -16,7 +16,7 @@ function App() {
           <Routes>
             <Route path="/pessoas">
               <Route path="novo" element={<PessoaForm />} />
-              <Route path="editar/:id" element={<PessoaForm />} />
+              <Route path="alterar/:id" element={<PessoaForm />} />
               <Route path="" element={<PessoaLista />} />
             </Route>
           </Routes>
