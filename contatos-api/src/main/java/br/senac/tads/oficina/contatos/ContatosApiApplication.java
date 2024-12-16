@@ -41,7 +41,7 @@ public class ContatosApiApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (interesseRepository.count() < 1) {
             interesseRepository.save(new Interesse("Java"));
-            interesseRepository.save(new Interesse("Angular"));
+            interesseRepository.save(new Interesse("React JS"));
             interesseRepository.save(new Interesse("Javascript"));
 			interesseRepository.save(new Interesse("Typescript"));
             interesseRepository.save(new Interesse("User experience"));
