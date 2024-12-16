@@ -199,6 +199,8 @@
 
     document.getElementById('modalExcluirForm').onsubmit = excluirPessoa;
 
+    // Lógica para verificar no sessionStorage se existe alguma mensagem
+    // para ser apresentada
     (async function() {
       const mensagemJson = sessionStorage.getItem('respostaForm');
       if (mensagemJson) {
