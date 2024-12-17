@@ -1,6 +1,86 @@
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 function Form() {
+
+  const [opcoesInteresses, setOpcoesInteresses] = useState([]);
+  const [dados, setDados] = useState({});
+  const [erros, setErros] = useState({});
+  const [interessesIds, setInteressesIds] = useState([]);
+
+  useEffect(() => {
+    async function carregarInteresses() {
+      const httpResp = await fetch('http://localhost:8080/api/interesses');
+      if (!httpResp.ok) {
+        return;
+      }
+      const opcoes = await httpResp.json();
+      setOpcoesInteresses(opcoes);
+    }
+    carregarInteresses();
+  }, []);
+
+  function handleInputChange(evt) {
+    const nomeCampo = evt.target.name;
+    const valorCampo = evt.target.value;
+    setDados((atual) => ({
+      ...atual,
+      [nomeCampo]: valorCampo
+    }));
+  }
+
+  function handleCheckboxChange(evt) {
+    const chkbox = evt.target;
+    const numValue = Number(chkbox.value);
+
+    if (chkbox.checked) {
+      if (!interessesIds.includes(numValue)) {
+        setInteressesIds((atual) => [...atual, numValue]);
+      }
+    } else {
+      setInteressesIds((atual) => atual.filter(val => val !== numValue));
+    }
+  }
+
+  async function salvar(evt) {
+    evt.preventDefault();
+    const httpResp = await fetch('http://localhost:8080/api/pessoas', {
+      method: 'post',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        ...dados,
+        interessesIds
+      })
+    });
+    if (!httpResp.ok) {
+      if (httpResp.status === 400) {
+        const errosCampos = await httpResp.json();
+        let errosTemp = {};
+        for (const err of errosCampos.errors) {
+          errosTemp = {
+            ...errosTemp,
+            [err.field]: err.defaultMessage
+          }
+        }
+        setErros(errosTemp);
+        return;
+      }
+      alert('Erro ao salvar - ' + httpResp.status);
+      return;
+    }
+    alert('Dados incluidos com sucesso');
+  }
+
+  useEffect(() => {
+    console.log(JSON.stringify(dados))
+  }, [dados]);
+
+  useEffect(() => {
+    console.log(JSON.stringify(interessesIds))
+  }, [interessesIds]);
+
   return (
     <div className="container-lg flex-shrink-0">
       <div className="row">
@@ -14,7 +94,7 @@ function Form() {
             Alterar pessoa
           </h2>
 
-          <form method="post" noValidate id="formDados">
+          <form method="post" noValidate id="formDados" onSubmit={salvar}>
             <div className="row mb-3">
               <label htmlFor="txtNome" className="col-sm-2 col-form-label">
                 Nome
@@ -23,14 +103,17 @@ function Form() {
                 <input
                   type="text"
                   name="nome"
-                  value=""
+                  value={dados.nome}
                   id="txtNome"
                   placeholder="Preencha o nome completo"
-                  className="form-control"
+                  className={`form-control ${erros.nome ? 'is-invalid' : ''}`}
                   maxLength="100"
                   required
+                  onChange={handleInputChange}
                 />
-                <div className="invalid-feedback"></div>
+                {
+                  erros.nome && <div className="invalid-feedback">{erros.nome}</div>
+                }
               </div>
             </div>
             <div className="row mb-3">
@@ -41,14 +124,17 @@ function Form() {
                 <input
                   type="email"
                   name="email"
-                  value=""
+                  value={dados.email}
                   id="txtEmail"
                   placeholder="E-mail válido"
-                  className="form-control"
+                  className={`form-control ${erros.email ? 'is-invalid' : ''}`}
                   maxLength="100"
                   required
+                  onChange={handleInputChange}
                 />
-                <div className="invalid-feedback"></div>
+                {
+                  erros.email && <div className="invalid-feedback">{erros.email}</div>
+                }
               </div>
             </div>
             <div className="row mb-3">
@@ -62,12 +148,15 @@ function Form() {
                 <input
                   type="date"
                   name="dataNascimento"
-                  value=""
+                  value={dados.dataNascimento || ''}
                   id="txtDataNascimento"
-                  className="form-control"
+                  className={`form-control ${erros.dataNascimento ? 'is-invalid' : ''}`}
                   required
+                  onChange={handleInputChange}
                 />
-                <div className="invalid-feedback"></div>
+                {
+                  erros.dataNascimento && <div className="invalid-feedback">{erros.dataNascimento}</div>
+                }
               </div>
             </div>
             <fieldset className="row mb-3">
@@ -79,18 +168,26 @@ function Form() {
               {/* <!-- ESTAO APRESENTADOS DIRETAMENTE NESTE HTML SOMENTE COMO EXEMPLO --> */}
               <div className="col-sm-10">
                 <div id="opcoesInteresses">
-                  <div className="form-check form-check-inline">
-                    <input
-                      type="checkbox"
-                      name="interessesIds"
-                      value="0"
-                      id="interesse0"
-                      className="form-check-input"
-                    />
-                    <label htmlFor="interesse0" className="form-check-label">
-                      Opção
-                    </label>
-                  </div>
+                  {
+                    opcoesInteresses.map(i => {
+                      const idHtml = `interesse${i.id}`;
+                      return (
+                        <div className="form-check form-check-inline" key={idHtml}>
+                          <input
+                            type="checkbox"
+                            name="interessesIds"
+                            value={i.id}
+                            id={idHtml}
+                            className="form-check-input"
+                            onChange={handleCheckboxChange}
+                          />
+                          <label htmlFor={idHtml} className="form-check-label">
+                            {i.nome}
+                          </label>
+                        </div>
+                      )
+                    })
+                  }
                 </div>
                 <div className="invalid-feedback"></div>
               </div>
